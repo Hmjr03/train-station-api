@@ -14,19 +14,35 @@ from train_station.models import (
 
 @admin.register(Station)
 class StationAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "latitude", "longitude")
+    list_display = (
+        "id",
+        "name",
+        "latitude",
+        "longitude",
+    )
     search_fields = ("name",)
 
 
 @admin.register(Route)
 class RouteAdmin(admin.ModelAdmin):
-    list_display = ("id", "source", "destination", "distance")
-    list_filter = ("source", "destination")
+    list_display = (
+        "id",
+        "source",
+        "destination",
+        "distance",
+    )
+    list_filter = (
+        "source",
+        "destination",
+    )
 
 
 @admin.register(TrainType)
 class TrainTypeAdmin(admin.ModelAdmin):
-    list_display = ("id", "name")
+    list_display = (
+        "id",
+        "name",
+    )
     search_fields = ("name",)
 
 
@@ -45,8 +61,15 @@ class TrainAdmin(admin.ModelAdmin):
 
 @admin.register(Crew)
 class CrewAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name")
-    search_fields = ("first_name", "last_name")
+    list_display = (
+        "id",
+        "first_name",
+        "last_name",
+    )
+    search_fields = (
+        "first_name",
+        "last_name",
+    )
 
 
 @admin.register(Journey)
@@ -58,13 +81,20 @@ class JourneyAdmin(admin.ModelAdmin):
         "departure_time",
         "arrival_time",
     )
-    list_filter = ("train", "route")
+    list_filter = (
+        "train",
+        "route",
+    )
     filter_horizontal = ("crew",)
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "user", "created_at")
+    list_display = (
+        "id",
+        "user",
+        "created_at",
+    )
     list_filter = ("created_at",)
 
 
