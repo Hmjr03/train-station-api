@@ -2,7 +2,7 @@
 
 Train Station API is a RESTful web service built with Django and Django REST Framework for managing train stations, routes, trains, journeys, crews, ticket orders, and seat reservations.
 
-This project was developed as a portfolio project inspired by the Cinema Shop API architecture and extended with custom booking validation, filtering, searching, pagination, JWT authentication, and demo data.
+This project was developed as a portfolio project inspired by the Cinema Shop API architecture and extended with custom booking validation, filtering, searching, pagination, JWT authentication, demo data, automated tests, and database documentation.
 
 ## Features
 
@@ -24,9 +24,11 @@ This project was developed as a portfolio project inspired by the Cinema Shop AP
 - Filtering
 - Ordering
 - Pagination
-- Admin panel
+- Django Admin
 - Demo data command
 - Automated API tests
+- Database diagram
+- Browsable API screenshots
 
 ## Tech Stack
 
@@ -39,11 +41,13 @@ This project was developed as a portfolio project inspired by the Cinema Shop AP
 - Flake8
 - Git
 - GitHub
+- draw.io
 
 ## Database Structure
 
 The project contains the following main entities:
 
+- User
 - Station
 - Route
 - TrainType
@@ -52,7 +56,6 @@ The project contains the following main entities:
 - Journey
 - Order
 - Ticket
-- User
 
 Main relationships:
 
@@ -60,6 +63,7 @@ Main relationships:
 - A Train belongs to a TrainType.
 - A Journey uses one Route and one Train.
 - A Journey can have multiple Crew members.
+- A Crew member can participate in multiple Journeys.
 - An Order belongs to a User.
 - An Order contains one or more Tickets.
 - A Ticket belongs to one Journey and one Order.
@@ -71,9 +75,30 @@ The following diagram represents the main database structure and relationships u
 
 ![Train Station API Database Diagram](docs/database-diagram.png)
 
-## Installation
+The editable draw.io source is also included in the repository:
 
-### 1. Clone the repository
+```text
+docs/database-diagram.drawio
 
-```bash
-git clone https://github.com/Hmjr03/train-station-api.git
+
+## Screenshots
+
+### API Root
+
+![API Root](docs/screenshots/01-api-root.png)
+
+### Stations List
+
+![Stations List](docs/screenshots/02-stations-list.png)
+
+### Journeys List
+
+![Journeys List](docs/screenshots/03-journeys-list.png)
+
+### Journey Filtering
+
+![Journey Filtering](docs/screenshots/04-journey-filter.png)
+
+### Django Admin
+
+![Django Admin](docs/screenshots/05-admin-panel.png)
