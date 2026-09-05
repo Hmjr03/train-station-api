@@ -31,7 +31,7 @@ from train_station.serializers import (
 
 
 class StationViewSet(viewsets.ModelViewSet):
-    queryset = Station.objects.all()
+    queryset = Station.objects.all().order_by("id")
     serializer_class = StationSerializer
     search_fields = ("name",)
     ordering_fields = ("name",)
@@ -44,9 +44,12 @@ class StationViewSet(viewsets.ModelViewSet):
 
 
 class RouteViewSet(viewsets.ModelViewSet):
-    queryset = Route.objects.select_related(
-        "source",
-        "destination",
+    queryset = (
+        Route.objects.select_related(
+            "source",
+            "destination",
+        )
+        .order_by("id")
     )
     serializer_class = RouteSerializer
     filterset_fields = (
@@ -69,7 +72,7 @@ class RouteViewSet(viewsets.ModelViewSet):
 
 
 class TrainTypeViewSet(viewsets.ModelViewSet):
-    queryset = TrainType.objects.all()
+    queryset = TrainType.objects.all().order_by("id")
     serializer_class = TrainTypeSerializer
     search_fields = ("name",)
 
@@ -81,7 +84,10 @@ class TrainTypeViewSet(viewsets.ModelViewSet):
 
 
 class TrainViewSet(viewsets.ModelViewSet):
-    queryset = Train.objects.select_related("train_type")
+    queryset = (
+        Train.objects.select_related("train_type")
+        .order_by("id")
+    )
     serializer_class = TrainSerializer
     filterset_fields = ("train_type",)
     search_fields = ("name",)
@@ -105,7 +111,7 @@ class TrainViewSet(viewsets.ModelViewSet):
 
 
 class CrewViewSet(viewsets.ModelViewSet):
-    queryset = Crew.objects.all()
+    queryset = Crew.objects.all().order_by("id")
     serializer_class = CrewSerializer
     search_fields = (
         "first_name",
@@ -139,6 +145,7 @@ class JourneyViewSet(viewsets.ModelViewSet):
         .annotate(
             tickets_count=Count("tickets"),
         )
+        .order_by("departure_time", "id")
     )
 
     filterset_class = JourneyFilter
@@ -190,4 +197,5 @@ class OrderViewSet(
                 "tickets__journey__route",
                 "tickets__journey__train",
             )
+            .order_by("-created_at")
         )
