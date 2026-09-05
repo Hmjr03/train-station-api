@@ -65,6 +65,12 @@ Main relationships:
 - A Ticket belongs to one Journey and one Order.
 - The same cargo and seat cannot be booked twice for the same Journey.
 
+## Database Diagram
+
+The following diagram represents the main database structure and relationships used by the Train Station API.
+
+![Train Station API Database Diagram](docs/database-diagram.png)
+
 ## Installation
 
 ### 1. Clone the repository
