@@ -12,6 +12,9 @@ from train_station.views import (
 )
 
 
+app_name = "train_station"
+
+
 router = DefaultRouter()
 
 router.register(
