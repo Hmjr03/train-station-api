@@ -169,7 +169,12 @@ class JourneyListSerializer(serializers.ModelSerializer):
         )
 
     def get_tickets_available(self, obj):
-        return obj.train.capacity - obj.tickets.count()
+        if hasattr(obj, "tickets_count"):
+            tickets_count = obj.tickets_count
+        else:
+            tickets_count = obj.tickets.count()
+
+        return obj.train.capacity - tickets_count
 
 
 class JourneyDetailSerializer(serializers.ModelSerializer):
@@ -194,7 +199,12 @@ class JourneyDetailSerializer(serializers.ModelSerializer):
         )
 
     def get_tickets_available(self, obj):
-        return obj.train.capacity - obj.tickets.count()
+        if hasattr(obj, "tickets_count"):
+            tickets_count = obj.tickets_count
+        else:
+            tickets_count = obj.tickets.count()
+
+        return obj.train.capacity - tickets_count
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -206,21 +216,24 @@ class TicketSerializer(serializers.ModelSerializer):
             "seat",
             "journey",
         )
+        read_only_fields = ("id",)
 
     def validate(self, attrs):
         journey = attrs["journey"]
+        cargo = attrs["cargo"]
+        seat = attrs["seat"]
 
         Ticket.validate_ticket(
-            cargo=attrs["cargo"],
-            seat=attrs["seat"],
+            cargo=cargo,
+            seat=seat,
             train=journey.train,
             error_to_raise=serializers.ValidationError,
         )
 
         if Ticket.objects.filter(
             journey=journey,
-            cargo=attrs["cargo"],
-            seat=attrs["seat"],
+            cargo=cargo,
+            seat=seat,
         ).exists():
             raise serializers.ValidationError(
                 "This seat is already booked for this journey."
@@ -247,6 +260,26 @@ class OrderSerializer(serializers.ModelSerializer):
             "created_at",
         )
 
+    def validate_tickets(self, tickets):
+        selected_seats = set()
+
+        for ticket in tickets:
+            seat_key = (
+                ticket["journey"].id,
+                ticket["cargo"],
+                ticket["seat"],
+            )
+
+            if seat_key in selected_seats:
+                raise serializers.ValidationError(
+                    "The same seat cannot be booked twice "
+                    "in one order."
+                )
+
+            selected_seats.add(seat_key)
+
+        return tickets
+
     @transaction.atomic
     def create(self, validated_data):
         tickets_data = validated_data.pop("tickets")
@@ -255,10 +288,14 @@ class OrderSerializer(serializers.ModelSerializer):
             user=self.context["request"].user,
         )
 
-        for ticket_data in tickets_data:
-            Ticket.objects.create(
-                order=order,
-                **ticket_data,
-            )
+        Ticket.objects.bulk_create(
+            [
+                Ticket(
+                    order=order,
+                    **ticket_data,
+                )
+                for ticket_data in tickets_data
+            ]
+        )
 
         return order

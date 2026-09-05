@@ -1,7 +1,11 @@
 from django.db.models import Count
 from rest_framework import mixins, viewsets
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import (
+    IsAdminUser,
+    IsAuthenticated,
+)
 
+from train_station.filters import JourneyFilter
 from train_station.models import (
     Crew,
     Journey,
@@ -137,11 +141,7 @@ class JourneyViewSet(viewsets.ModelViewSet):
         )
     )
 
-    filterset_fields = (
-        "route__source",
-        "route__destination",
-        "train",
-    )
+    filterset_class = JourneyFilter
 
     search_fields = (
         "route__source__name",
@@ -187,5 +187,7 @@ class OrderViewSet(
             .prefetch_related(
                 "tickets",
                 "tickets__journey",
+                "tickets__journey__route",
+                "tickets__journey__train",
             )
         )
