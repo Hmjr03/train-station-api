@@ -1,0 +1,32 @@
+# Environment variables
+.env
+
+# Virtual environments
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+
+# PyCharm / IDE
+.idea/
+.vscode/
+*.iml
+
+# macOS
+.DS_Store
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
